@@ -1,0 +1,74 @@
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <curses.h>
+
+void sig_winch(int signo)
+{
+struct winsize size;
+ioctl(fileno(stdout), TIOCGWINSZ, (char *) &size);
+resizeterm(size.ws_row, size.ws_col);
+}
+
+
+int main(int argc, char ** argv)
+{
+WINDOW * wnd;
+WINDOW * subwnd;
+
+initscr();
+signal(SIGWINCH, sig_winch);
+cbreak();
+
+/*struct winsize size;
+ioctl(fileno(stdout), TIOCGWINSZ, (char *) &size);
+char **v = (char **)calloc(size.ws_row, sizeof(char));
+int i;
+for(i = 0; i < size.ws_col; i++)
+{
+    v[i] = (char *)calloc(size.ws_col, sizeof(char));
+}*/
+
+int wi=0;
+int he=0;
+
+int c=getch();
+printf("%d",c);
+c=getch();/*
+while(c!=113)
+{
+    switch(c)
+    case 37:{
+	wi--;
+	break;}
+    case 38:{
+	he--;
+	break;}
+    case 39:{
+	wi++;
+	break;}
+    case 37:{
+	he++;
+	break;}
+    default:
+	if(c>=33&&c<=126)
+	{printw("%c",c);v[wi][he]=c;we++;move(we,he);refresh();}
+	break;
+    c=getch();
+}
+*/
+//noecho();
+curs_set(1);
+attron(A_BOLD);
+move(0, 0);
+//printw("Hello, brave new curses world!\n");
+attroff(A_BOLD);
+attron(A_BLINK);
+//move(7, 16);
+//printw("Press any key to continue...");
+refresh();
+getch();
+endwin();
+exit(EXIT_SUCCESS);
+}

@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stddef.h>
-#include<dlfcn.h>
+#include <dlfcn.h>
 #include<stdlib.h>
 int main()
 {
@@ -21,24 +21,46 @@ int main()
 	{
 	    return 1;
 	}
-	char *Name=dlsym(libs[i],"Name");
-	printf("%d) %s\n,",i,Name);
 	i++;
     }
+    i=0;
+    float (*func[4])(float x,float y);
+    while(i<countoflib)
+    {
+	char *Name=dlsym(libs[i],"Name");
+	func[i]=dlsym(libs[i],"glob");
+	printf("%d) %s\n",i,Name);
+	i++;
+    }
+    printf("%d) Exit\n",i);
     float num=0;
     printf("Your number: %f\n",num);
-    int flag;
-    printf("1.Add\n");
-    printf("2.Remove\n");
-    printf("3.Multiply\n");
-    printf("4.Divide\n");
-    printf("5.Exit\n");
-    scanf("%d",&flag);/*
-    while(flag!=5)
-    {
-	switch(flag)
+    int f;
+    printf("aaaa");    
+    scanf("%f",&f);
+    printf("br0");
+    while(f<=countoflib+1)
+    { printf("br1");
+	float alter=1;
+	printf("br2");
+	printf("Inter number:");
+	//scanf("%f",&alter);
+	printf("break1");
+	num=func[f](num,alter);
+	while(i<countoflib)
 	{
-	    case 1:{
+	    char *Name=dlsym(libs[i],"Name");
+	    func[i]=dlsym(libs[i],"glob");
+	    printf("%d) %s\n",i,Name);
+	    i++;
+	}
+	printf("%d) Exit\n",i);
+        printf("Your number: %f\n",num);
+	int flag=0;    
+	scanf("%d",&flag);
+	/*switch(flag)
+	{
+	    case :{
 		float alter;
 		scanf("%f",&alter);
 		num=add(num,alter);
@@ -70,7 +92,7 @@ int main()
 	printf("3.Multiply\n");
 	printf("4.Divide\n");
 	printf("5.Exit\n");
-	scanf("%d",&flag);
-    }*/
+	scanf("%d",&flag);*/
+    }
     return 0;
 }
