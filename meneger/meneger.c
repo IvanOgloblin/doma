@@ -164,7 +164,7 @@ while(ex)
 	    {
 		perror("couldn't open");		
 		return 1;
-	    }}char *temp=pathl;pathl=path;free(temp);}
+	    }char *temp=pathl;pathl=path;free(temp);}}
 	    
 	    
 	if(rl==1)
@@ -181,7 +181,7 @@ while(ex)
 	{
 	    perror("couldn't open");
 	    return 1;
-	}}char *temp=pathr;pathr=path;free(temp);}
+	}char *temp=pathr;pathr=path;free(temp);}}
 	clear();
 	refresh();
 	break;

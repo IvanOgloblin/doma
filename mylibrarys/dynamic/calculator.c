@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stddef.h>
-#include <dlfcn.h>
+#include<dlfcn.h>
 #include<stdlib.h>
 int main()
 {
@@ -15,7 +15,6 @@ int main()
     {
 	printf("Inter Library`s path: ");
 	scanf("%s",((*lib)[i]));
-//	libs[i] = dlopen(((*lib)[i]),RTLD_LAZY);
 	libs[i] = dlopen(((*lib)[i]),RTLD_LAZY);
 	if (!libs[i])
 	{
@@ -24,7 +23,7 @@ int main()
 	i++;
     }
     i=0;
-    float (*func[4])(float x,float y);
+    float (*func[4])(float,float);
     while(i<countoflib)
     {
 	char *Name=dlsym(libs[i],"Name");
@@ -36,15 +35,17 @@ int main()
     float num=0;
     printf("Your number: %f\n",num);
     int f;
-    printf("aaaa");    
-    scanf("%f",&f);
-    printf("br0");
-    while(f<=countoflib+1)
+    printf("aaaabbbbb\n");
+    printf("gggs\n");
+    scanf("%d",&f);
+    printf("%d",f);
+    while(f<=countoflib+1&&f>=0)
     { printf("br1");
 	float alter=1;
 	printf("br2");
 	printf("Inter number:");
-	//scanf("%f",&alter);
+	scanf("%f",&alter);
+	printf("%f",alter);
 	printf("break1");
 	num=func[f](num,alter);
 	while(i<countoflib)
@@ -56,8 +57,9 @@ int main()
 	}
 	printf("%d) Exit\n",i);
         printf("Your number: %f\n",num);
-	int flag=0;    
-	scanf("%d",&flag);
+	//int flag=0;    
+	
+	scanf("%d",&f);
 	/*switch(flag)
 	{
 	    case :{
