@@ -24,52 +24,13 @@ noecho();
 curs_set(1);
 struct winsize size;
 ioctl(fileno(stdout), TIOCGWINSZ, (char *) &size);
-wnd = newwin(0, 0, 30,5);
-//wmove(wnd,0,5);
+wnd = newwin(size.ws_row, size.ws_col,0,0);
 attron(A_BOLD);
-
-//char **v = (char **)calloc(size.ws_row, sizeof(char));
-//int i;
-//for(i = 0; i < size.ws_col; i++)
-//{
-//    v[i] = (char *)calloc(size.ws_col, sizeof(char));
-//}
-
 int wi=0;
 int he=0;
 
-
-
-
-
-/*bool ex = false;
-    while ( !ex )
-        {
-                int ch = getch();
-                
-                        switch ( ch )
-                                {
-                                        case ERR:
-                                                    printw("Please, press any key...\n"); //Если нажатия не было, напоминаем пользователю, что надо нажать клавишу
-                                                                break;
-                                                                        case 259: //Выходим из программы, если была нажата F2
-                                                                                    ex = true;
-                                                                                                break;
-                                                                                                        default:  //Если всё нормально, выводим код нажатой клавиши
-                                                                                                                    printw("Code of pressed key is %d\n", ch);
-                                                                                                            	    move(0,0);
-                                                                                                                                break;
-                                                                                                                                        }
-                                                                                                                                        
-                                                                                                                                                refresh(); //Выводим на настоящий экран
-                                                                                                                                                
-                                                                                                                                                    }
-*/
-
-
-
-
-while(1)
+bool ex = true;
+while(ex)
 {
     int c=getch();
     switch(c)
@@ -78,53 +39,55 @@ while(1)
 	return 0;
     case 260:
 	wi--;
-	move(he,wi);
+	wmove(wnd,he,wi);
 	break;
     case 259:
 	he--;
-	move(he,wi);
+	wmove(wnd,he,wi);
 	break;
     case 261:
 	wi++;
-	move(he,wi);
+	wmove(wnd,he,wi);
 	break;
     case 258:
 	he++;
-	move(he,wi);
+	wmove(wnd,he,wi);
 	break;
     case 269:
 	{FILE *fp;
 	char name[]="ncurses.s";
-	    if(fp = fopen(name, "w+b")!=NULL) 
+	    if((fp = fopen(name, "w"))!=NULL) 
 	    {
-		putwin(stdscr,fp);
+		putwin(wnd,fp);
+		//scr_dump("ncurses.s");
 	    }
 	    else printf("Не удалось открыть файл");
 	    
 	    fclose(fp);
-	    return 0;
+	    ex=false;
 	break;}
     case 270:
 	{FILE *fp;
 	char name[]="ncurses.s";
-	    if(fp = fopen(name, "r")!=NULL) 
+	    if((fp = fopen(name, "r"))!=NULL) 
 	    {
-		stdscr=getwin(fp); refresh();
+		wnd=getwin(fp);
+		//scr_init("ncurses.s"); 
+		wrefresh(wnd);
 	    }
-	    else printf("Не удалось открыть файл");
+	    else{printf("Не удалось открыть файл");
 	    
 	    fclose(fp);
-	    return 0;
+	    ex=false;}
 	break;}
     case 271:
 	{return 0;}
     default:
 	if(c>=32&&c<=126)
 	{
-	    printw("%c",c);
+	    wprintw(wnd,"%c",c);
 	    wi++;
-	    //v[wi][he]=c;
-	    refresh();
+	    wrefresh(wnd);
 	}
 	break;
     }
