@@ -8,13 +8,13 @@
 //#include<io.h>
 int main()
 {
-    char *str="ls -la -p|cut";
+    char *str=;//"ls -la -p|cut";
     //    while(!ex)
     //    {
     //fflush(stdin);
             printf("Inter comand: ");
                     //scanf("%s",str);
-                        //    gets(str);
+                            gets(str);
     int fdi;
     int fdo;
     if(pipe(&fdo) < 0)

@@ -16,7 +16,7 @@ case 0:
 printf(" CHILD: Это процесс-потомок!\n");
 printf(" CHILD: Мой PID -- %d\n", getpid());
 printf(" CHILD: PID моего родителя -- %d\n",getppid());
-printf(" CHILD: Введите мой код возврата                                                                                                          (как можно меньше):");
+printf(" CHILD: Введите мой код возврата(как можно меньше):");
 scanf(" %d");
 printf(" CHILD: Выход!\n");
 exit(rv);

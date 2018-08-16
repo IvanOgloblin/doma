@@ -1,0 +1,85 @@
+#include<stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include<netinet/udp.h>
+#include <netinet/ip.h>
+
+struct udppacket
+{
+    short int sour;
+    short int dest;
+    short int summ;
+    short int leng;
+    char payl[15];
+};
+
+int main()
+{
+	struct ip *myip;
+	struct udphdr *myudp;
+	struct sockaddr_in sin;
+	char *payload="Hello world!";
+	struct udppacket up;
+	bzero((char* )&up,sizeof(up));
+	strcpy(up.payl,"Hello world!");
+	up.sour=htons(1234);
+	up.dest=htons(2222);
+	up.summ=0;
+	up.leng=(sizeof(up.payl)+sizeof(up.sour)+sizeof(up.dest)+sizeof(up.summ)+sizeof(up.leng));
+	up.leng=sizeof(up);
+	printf("%d",up.leng);
+	sin.sin_family=AF_INET;
+	sin.sin_port = htons(2222);
+	sin.sin_addr.s_addr = inet_addr("127.0.0.1");
+	/*memset(payload, 0, 4096);
+	
+	myudp->source=htons(3333);
+	myudp->dest=htons(2222);
+	myudp->len=htons(sizeof(struct udphdr)+sizeof(payload));
+	myudp->check=0;
+	
+	myip->ip_hl=5;
+	myip->ip_v=4;
+	myip->ip_tos=0;
+	myip->ip_len=sizeof(struct ip)+sizeof(struct udphdr);
+	
+	myip->ip_id=htonl(6666);
+	myip->ip_off=0;
+	myip->ip_ttl=255;
+	myip->ip_p=17;
+	myip->ip_sum=0;
+	myip->ip_src.s_addr=inet_addr("127.0.0.1");
+	myip->ip_dst.s_addr=sin.sin_addr.s_addr;;
+	
+	
+	int s = socket (AF_INET, SOCK_RAW, IPPROTO_RAW);
+	int one = 1;
+	const int *val = &one;
+	setsockopt(s, IPPROTO_IP, IP_HDRINCL, val, sizeof (one));
+	
+	sendto(s,payload,myip->ip_len,0,(struct sockaddr *)&sin, sizeof(sin));
+	
+    	    int i=0;
+            FILE *f = fopen("sniffer.txt", "w");
+            for(i=0;i<10;i++)
+            {
+                if((recvfrom(s, payload, myip->ip_len, 0, (struct sockaddr *)&sin, sizeof(sin))) <0)
+                {
+                    perror("recvfrom()");
+                    exit(4);
+                }
+                char *ch;
+                inet_aton(ch,sin.sin_addr);
+                fprintf(f,"Received message %s from domain %s port %d IP %s\n\n",payload,(sin.sin_family == AF_INET?"AF_INET":"UNKNOWN"),ntohs(sin.sin_port),ch);
+                                                                                                                                                                                                                                                                                    
+            }
+            fclose(f);
+            */
+	    exit(0);
+}
