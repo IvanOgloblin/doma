@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <linux/if_packet.h>
+#include <net/ethernet.h>
 
 
 struct udppacket
@@ -73,7 +75,8 @@ unsigned short get_chksum(unsigned short *ptr, int nbytes)
 
 int main()
 {
-	struct sockaddr_ll serv, client;
+	struct sockaddr_ll serv;
+	struct sockaddr_in client;
 	struct ethernetpacket ep;
 	int sock;
 	short dest = 30002, sour = 31000;
@@ -84,9 +87,9 @@ int main()
 	int val = 1;
 	setsockopt(sock, IPPROTO_IP, IP_HDRINCL,(const char *)&val, sizeof(val));
 	serv.sll_family = AF_PACKET;
-	serv.sll_protocol = htons(ETG_P_ALL);
-	serv.sll_ifindex = if_nametoindex(eth0);
-	serv.halen=6;
+	serv.sll_protocol = htons(ETH_P_ALL);
+	serv.sll_ifindex = if_nametoindex("eth0");
+	serv.sll_halen=6;
 	serv.sll_addr[0]=0xA0;
 	serv.sll_addr[1]=0xAB;
 	serv.sll_addr[2]=0x1B;
@@ -117,7 +120,7 @@ int main()
 	
 	
 	ep.type=0x0800;
-	ep.csum=get_chksum((unsigned short*) &ep+8, 47);
+	ep.FCS=get_chksum((unsigned short*) &ep+8, 47);
 	ep.ip.ver=4;
 	ep.ip.hlen=5;
 	ep.ip.tos=0;
@@ -126,9 +129,9 @@ int main()
 	ep.ip.flfr=0;
 	ep.ip.ttl=64;
 	ep.ip.prot=17;
-	ep.ip.csum=get_chksum((unsigned short*) &ip, sizeof(ip));
-	ep.ip.sour=inet_addr("127.0.0.1");
-	ep.ip.dest=inet_addr("127.0.0.1");
+	ep.ip.csum=get_chksum((unsigned short*) &ep.ip, sizeof(ep.ip));
+	ep.ip.sour=inet_addr("192.168.2.111");
+	ep.ip.dest=inet_addr("192.168.2.101");
 	ep.ip.up.sour= htons(sour);
 	ep.ip.up.dest = htons(dest);
 	ep.ip.up.leng = htons(29);
@@ -136,7 +139,7 @@ int main()
 	strncpy(ep.ip.up.data, "Hello world I am G1S\0", sizeof(ep.ip.up.data));
 		
 	int client_leng = sizeof(client);
-	if (sendto(sock, &ep, sizeof(ip), 0, (struct sockaddr *)&serv, sizeof(serv)) < 0)
+	if (sendto(sock, &ep, sizeof(ep), 0, (struct sockaddr *)&serv, sizeof(serv)) < 0)
 	{
 	    perror("Sendto");
 	    exit(1);
